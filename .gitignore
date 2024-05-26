@@ -3,3 +3,7 @@ node_modules
 
 # Ignore sensitive information
 .env
+
+
+# Ignore Trial files
+trial

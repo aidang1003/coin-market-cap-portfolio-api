@@ -18,15 +18,30 @@ async function getBitcoinPrice() {
       },
     });
 
-    const data = response.data.data;
+    const data = response.data.data; // Raw data object received from the API
 
-    bitcoinPrice = data["1"].quote.USD.price;
-    ethereumPrice = data["1027"].quote.USD.price;
+    const Bitcoin = new Asset("BTC", "1", data);
+    const Ethereum = new Asset("ETH", "1027", data);
+
+    bitcoinPrice = Bitcoin.price();
+    ethereumPrice = Ethereum.price();
 
     return data;
   } catch (error) {
-    console.error("Error fetching Bitcoin price:", error);
+    console.error("Error fetching price data:", error);
     return null; // Or throw an error if preferred
+  }
+}
+
+class Asset {
+  constructor(assetName, assetId, data) {
+    this.assetName = assetName;
+    this.assetId = assetId;
+    this.data = data;
+    this.assetPrice = this.data[this.assetId].quote.USD.price;
+  }
+  price() {
+    return this.assetPrice;
   }
 }
 

@@ -14,7 +14,7 @@ class Asset {
     this.assetId = assetId;
     this.data = data;
     try {
-      this.assetPrice = this.data[this.assetId].quote.USD.price;
+      this.assetPrice = this.data; //.data[this.assetId]; //.quote.USD.price;
     } catch (error) {
       console.error("Could not pull asset id", this.assetId, error);
     }
@@ -34,8 +34,11 @@ async function getDataObject() {
         "X-CMC_PRO_API_KEY": apiKey,
       },
     });
-    const data = response.data.data;
-    return data; // Data object received from the API
+    if (response) {
+      // success
+      const json = response.data.data;
+      return json;
+    }
   } catch (error) {
     console.error("Error fetching price data:", error);
     return null; // Or throw an error if preferred
@@ -83,11 +86,9 @@ function updatePricesInExcel(Assets, filePath) {
 }
 
 // Create the data object
-const data = getDataObject()
-  .then((data) => console.log("Crypto price data received >> "))
-  .catch((error) => console.error("Error:", error));
+const data = getDataObject();
 
-console.log(data);
+// console.log(data);
 
 // Create Asset object for all cryptocurrencies
 // const ARB = new Asset("ARB", "11841", data);
@@ -129,6 +130,8 @@ const BTC = new Asset("BTC", "1", data);
 // const USDE = new Asset("USDE", "29470", data);
 // const wETH = new Asset("wETH", "2396", data);
 // const XMR = new Asset("XMR", "328", data);
+
+console.log(BTC.data);
 
 // Create a list of assets
 // const Assets = [
